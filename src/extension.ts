@@ -1213,7 +1213,7 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
         }
 
         function playSong(videoId, title, artist, thumbnail = '') {
-            const streamUrl = \`http://localhost:3000/stream/\${videoId}\`;
+            const streamUrl = \`https://stream.sharecodelive.com/stream/\${videoId}\`;
             const miniPlayer = document.getElementById('miniPlayer');
             const miniPlayerTitle = document.getElementById('miniPlayerTitle');
             const miniPlayerArtist = document.getElementById('miniPlayerArtist');
@@ -1252,7 +1252,7 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
             audioPlayer.play().catch(error => {
                 vscode.postMessage({
                     type: 'error',
-                    text: \`Error playing audio: \${error.message}. Make sure the streaming server is running at localhost:3000\`
+                    text: \`Error playing audio: \${error.message}. Make sure the streaming server is running at https://stream.sharecodelive.com\`
                 });
             });
 
@@ -1425,7 +1425,7 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
                     document.body.appendChild(preloadAudio);
                 }
 
-                const streamUrl = \`http://localhost:3000/stream/\${song.id}\`;
+                const streamUrl = \`https://stream.sharecodelive.com/stream/\${song.id}\`;
                 preloadAudio.src = streamUrl;
                 
                 console.log(\`🔄 Preloading next song: \${song.title}\`);
