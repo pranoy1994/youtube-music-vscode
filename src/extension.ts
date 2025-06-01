@@ -159,6 +159,7 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
             color: var(--vscode-editor-foreground);
             height: 100vh;
             overflow: hidden;
+            font-size: 12px;
         }
 
         .container {
@@ -167,26 +168,202 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
             height: 100vh;
         }
 
+        /* Improved Seek Bar at Top */
+        .seek-bar-container {
+            height: 6px;
+            background: var(--vscode-scrollbarSlider-background);
+            position: relative;
+            cursor: pointer;
+            display: none;
+            padding: 2px 0;
+            box-sizing: border-box;
+        }
+
+        .seek-bar-container.active {
+            display: block;
+        }
+
+        .seek-bar-track {
+            height: 2px;
+            background: var(--vscode-scrollbarSlider-background);
+            border-radius: 1px;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .seek-bar-progress {
+            height: 2px;
+            background: var(--vscode-progressBar-foreground);
+            width: 0%;
+            transition: width 0.1s;
+            position: relative;
+            border-radius: 1px;
+        }
+
+        .seek-bar-handle {
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--vscode-progressBar-foreground);
+            border-radius: 50%;
+            cursor: grab;
+            opacity: 0.8;
+            transition: opacity 0.2s, transform 0.2s;
+            border: 2px solid var(--vscode-editor-background);
+            background-color: gray;
+        }
+
+        .seek-bar-container:hover .seek-bar-handle {
+            opacity: 1;
+            transform: translateY(-50%) scale(1.2);
+        }
+
+        .seek-bar-handle:active {
+            cursor: grabbing;
+            transform: translateY(-50%) scale(1.3);
+        }
+
+        .seek-bar-container:hover .seek-bar-track {
+            height: 3px;
+        }
+
+        .seek-bar-container:hover .seek-bar-progress {
+            height: 3px;
+        }
+
         .header {
-            padding: 10px 20px;
+            padding: 8px 12px;
             border-bottom: 1px solid var(--vscode-panel-border);
             background-color: var(--vscode-panel-background);
         }
 
+        .mini-player {
+            background: var(--vscode-panel-background);
+            border-bottom: 1px solid var(--vscode-panel-border);
+            padding: 8px 12px;
+            display: none;
+            min-height: 40px;
+        }
+
+        .mini-player.active {
+            display: block;
+        }
+
+        .mini-player-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+        }
+
+        .mini-player-thumbnail {
+            width: 32px;
+            height: 24px;
+            border-radius: 3px;
+            object-fit: cover;
+            background: var(--vscode-input-background);
+        }
+
+        .mini-player-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .mini-player-title {
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 11px;
+        }
+
+        .mini-player-artist {
+            color: var(--vscode-descriptionForeground);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 10px;
+        }
+
+        .mini-player-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .custom-audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .control-btn {
+            padding: 6px 8px;
+            background: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            min-width: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:hover {
+            background: var(--vscode-button-hoverBackground);
+        }
+
+        .control-btn:disabled {
+            background: var(--vscode-button-secondaryBackground);
+            color: var(--vscode-button-secondaryForeground);
+            cursor: not-allowed;
+        }
+
+        .time-display {
+            font-size: 10px;
+            color: var(--vscode-descriptionForeground);
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .mini-control-btn {
+            padding: 4px 6px;
+            background: var(--vscode-button-secondaryBackground);
+            color: var(--vscode-button-secondaryForeground);
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+            min-width: 20px;
+        }
+
+        .mini-control-btn:hover {
+            background: var(--vscode-button-secondaryHoverBackground);
+        }
+
         .tabs {
             display: flex;
-            gap: 10px;
+            gap: 6px;
             align-items: center;
         }
 
         .tab {
-            padding: 8px 16px;
+            padding: 6px 12px;
             background: var(--vscode-button-secondaryBackground);
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             color: var(--vscode-button-secondaryForeground);
             cursor: pointer;
-            font-size: 13px;
+            font-size: 11px;
             transition: all 0.2s;
         }
 
@@ -201,13 +378,13 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
 
         .settings-button {
             margin-left: auto;
-            padding: 6px 12px;
+            padding: 4px 8px;
             background: var(--vscode-button-secondaryBackground);
             color: var(--vscode-button-secondaryForeground);
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 10px;
         }
 
         .settings-button:hover {
@@ -216,7 +393,7 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
 
         .content {
             flex: 1;
-            padding: 20px;
+            padding: 12px;
             overflow-y: auto;
         }
 
@@ -224,43 +401,47 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
             background: var(--vscode-inputValidation-warningBackground);
             color: var(--vscode-inputValidation-warningForeground);
             border: 1px solid var(--vscode-inputValidation-warningBorder);
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 20px;
+            padding: 8px;
+            border-radius: 3px;
+            margin-bottom: 12px;
+            font-size: 11px;
         }
 
         .api-warning button {
             background: var(--vscode-button-background);
             color: var(--vscode-button-foreground);
             border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
+            padding: 4px 8px;
+            border-radius: 3px;
             cursor: pointer;
-            margin-top: 8px;
+            margin-top: 6px;
+            font-size: 10px;
         }
 
         .search-container {
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
 
         .search-input {
             width: 100%;
-            padding: 10px;
+            padding: 6px;
             background: var(--vscode-input-background);
             color: var(--vscode-input-foreground);
             border: 1px solid var(--vscode-input-border);
-            border-radius: 4px;
-            font-size: 14px;
+            border-radius: 3px;
+            font-size: 11px;
+            box-sizing: border-box;
         }
 
         .search-button {
-            margin-top: 10px;
-            padding: 8px 16px;
+            margin-top: 6px;
+            padding: 6px 12px;
             background: var(--vscode-button-background);
             color: var(--vscode-button-foreground);
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
+            font-size: 11px;
         }
 
         .search-button:hover {
@@ -274,16 +455,17 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
         }
 
         .song-list {
-            display: grid;
-            gap: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .song-item {
             display: flex;
             align-items: center;
-            padding: 12px;
+            padding: 8px;
             background: var(--vscode-list-hoverBackground);
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
             transition: background 0.2s;
         }
@@ -293,103 +475,80 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
         }
 
         .song-thumbnail {
-            width: 60px;
-            height: 45px;
+            width: 40px;
+            height: 30px;
             background: var(--vscode-input-background);
-            border-radius: 4px;
-            margin-right: 12px;
+            border-radius: 3px;
+            margin-right: 8px;
             object-fit: cover;
+            flex-shrink: 0;
         }
 
         .song-info {
             flex: 1;
+            min-width: 0;
         }
 
         .song-title {
             font-weight: 500;
-            margin-bottom: 4px;
-            font-size: 14px;
+            margin-bottom: 2px;
+            font-size: 11px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .song-artist {
             color: var(--vscode-descriptionForeground);
-            font-size: 12px;
+            font-size: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .song-duration {
             color: var(--vscode-descriptionForeground);
-            font-size: 11px;
+            font-size: 9px;
             margin-top: 2px;
         }
 
         .play-button {
-            padding: 6px 12px;
+            padding: 4px 8px;
             background: var(--vscode-button-background);
             color: var(--vscode-button-foreground);
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 10px;
+            flex-shrink: 0;
         }
 
         .play-button:hover {
             background: var(--vscode-button-hoverBackground);
         }
 
-        .player {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--vscode-panel-background);
-            border-top: 1px solid var(--vscode-panel-border);
-            padding: 15px;
-            display: none;
-        }
-
-        .player.active {
-            display: block;
-        }
-
-        .player-controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .now-playing {
-            flex: 1;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        audio {
-            flex: 1;
-            max-width: 300px;
-        }
-
         .section {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .section-title {
-            font-size: 16px;
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             color: var(--vscode-foreground);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .refresh-button {
-            padding: 4px 8px;
+            padding: 3px 6px;
             background: var(--vscode-button-secondaryBackground);
             color: var(--vscode-button-secondaryForeground);
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 9px;
         }
 
         .refresh-button:hover {
@@ -398,21 +557,23 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
 
         .loading {
             text-align: center;
-            padding: 40px;
+            padding: 20px;
             color: var(--vscode-descriptionForeground);
+            font-size: 11px;
         }
 
         .error {
             text-align: center;
-            padding: 40px;
+            padding: 20px;
             color: var(--vscode-errorForeground);
+            font-size: 11px;
         }
 
         .spinner {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid var(--vscode-progressBar-background);
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--vscode-progressBar-background);
             border-radius: 50%;
             border-top-color: var(--vscode-progressBar-foreground);
             animation: spin 1s ease-in-out infinite;
@@ -423,30 +584,31 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
         }
 
         .next-song-info {
-            margin-top: 10px;
-            padding: 8px 12px;
+            margin-top: 6px;
+            padding: 6px 8px;
             background: var(--vscode-list-hoverBackground);
-            border-radius: 4px;
-            border-left: 3px solid var(--vscode-button-background);
+            border-radius: 3px;
+            border-left: 2px solid var(--vscode-button-background);
             display: none;
+            font-size: 10px;
         }
 
         .next-song-label {
-            font-size: 11px;
+            font-size: 9px;
             color: var(--vscode-descriptionForeground);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             font-weight: 500;
         }
 
         .next-song-details {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .next-song-thumb {
-            width: 32px;
-            height: 24px;
+            width: 24px;
+            height: 18px;
             border-radius: 2px;
             object-fit: cover;
         }
@@ -457,7 +619,7 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
         }
 
         .next-song-title {
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 500;
             color: var(--vscode-foreground);
             overflow: hidden;
@@ -466,7 +628,7 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
         }
 
         .next-song-artist {
-            font-size: 11px;
+            font-size: 9px;
             color: var(--vscode-descriptionForeground);
             overflow: hidden;
             text-overflow: ellipsis;
@@ -477,33 +639,99 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
             background: var(--vscode-button-secondaryBackground);
             color: var(--vscode-button-secondaryForeground);
             border: none;
-            padding: 4px 8px;
-            border-radius: 3px;
+            padding: 3px 6px;
+            border-radius: 2px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 10px;
             transition: background 0.2s;
         }
 
         .autoplay-toggle:hover {
             background: var(--vscode-button-secondaryHoverBackground);
         }
+
+        /* Compact mode adjustments for very small windows */
+        @media (max-height: 400px) {
+            .content {
+                padding: 8px;
+            }
+            
+            .song-item {
+                padding: 6px;
+            }
+            
+            .section {
+                margin-bottom: 12px;
+            }
+        }
+
+        /* Hide the audio element completely */
+        #audioPlayer {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="tabs">
-                <button class="tab active" data-tab="trending">Trending</button>
-                <button class="tab" data-tab="search">Search</button>
-                <button class="tab" data-tab="regional">Regional</button>
-                <button class="settings-button" onclick="openSettings()">⚙️ Settings</button>
+
+        <!-- Compact Mini Player -->
+        <div class="mini-player" id="miniPlayer">
+            <div class="mini-player-content">
+                <img class="mini-player-thumbnail" id="miniPlayerThumbnail" src="" alt="Now playing">
+                <div class="mini-player-info">
+                    <div class="mini-player-title" id="miniPlayerTitle">No song selected</div>
+                    <div class="mini-player-artist" id="miniPlayerArtist"></div>
+                </div>
+                <div class="mini-player-controls">
+                    <div class="custom-audio-controls">
+                        <button class="control-btn" id="playPauseBtn" onclick="togglePlayPause()">▶</button>
+                        <button class="control-btn" id="nextBtn" onclick="playNext()" title="Next Song">⏭</button>
+                        <div class="time-display" id="timeDisplay">0:00 / 0:00</div>
+                    </div>
+                    <button class="mini-control-btn autoplay-toggle" onclick="toggleAutoplay()" title="Toggle Autoplay">
+                        <span id="autoplayIcon">🔄</span>
+                    </button>
+                    <button class="mini-control-btn" onclick="closePlayer()" title="Close">✕</button>
+                </div>
+            </div>
+            <div class="next-song-info" id="nextSongInfo">
+                <div class="next-song-label">Up Next:</div>
+                <div class="next-song-details">
+                    <img class="next-song-thumb" src="" alt="Next song">
+                    <div class="next-song-text">
+                        <div class="next-song-title"></div>
+                        <div class="next-song-artist"></div>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <!-- Hidden Audio Element -->
+        <audio id="audioPlayer"></audio>
+
+        <!-- Improved Custom Seek Bar at Top -->
+        <div class="seek-bar-container" id="seekBarContainer">
+            <div class="seek-bar-track">
+                <div class="seek-bar-progress" id="seekBarProgress">
+                    <div class="seek-bar-handle" id="seekBarHandle"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="header">
+            <div class="tabs">
+                <button class="tab active" data-tab="trending">🔥 Trending</button>
+                <button class="tab" data-tab="search">🔍 Search</button>
+                <button class="tab" data-tab="regional">🌍 Regional</button>
+                <button class="settings-button" onclick="openSettings()">⚙️</button>
+            </div>
+        </div>
+
 
         <div class="content">
             <div id="apiWarning" class="api-warning" style="display: none;">
                 <strong>⚠️ YouTube API Key Required</strong><br>
-                To fetch real YouTube data, please configure your YouTube Data API v3 key in the extension settings.
+                Configure your YouTube Data API v3 key in settings.
                 <br><button onclick="openSettings()">Open Settings</button>
             </div>
 
@@ -512,11 +740,10 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
                 <div class="section">
                     <div class="section-title">
                         🔥 Trending Music
-                        <button class="refresh-button" onclick="loadTrending()">Refresh</button>
+                        <button class="refresh-button" onclick="loadTrending()">↻</button>
                     </div>
                     <div class="loading">
                         <div class="spinner"></div>
-                        Loading trending music...
                     </div>
                 </div>
             </div>
@@ -534,38 +761,28 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
             <div id="regional" class="tab-content" style="display: none;">
                 <div class="section">
                     <div class="section-title">
-                        🇮🇳 Popular in India
-                        <button class="refresh-button" onclick="loadRegional('IN')">Refresh</button>
+                        🇮🇳 India
+                        <button class="refresh-button" onclick="loadRegional('IN')">↻</button>
                     </div>
                     <div id="indiaResults" class="song-list">
                         <div class="loading">
                             <div class="spinner"></div>
-                            Loading popular music in India...
+                          
                         </div>
                     </div>
                 </div>
                 <div class="section">
                     <div class="section-title">
-                        🇬🇧 Popular in UK
-                        <button class="refresh-button" onclick="loadRegional('GB')">Refresh</button>
+                        🇬🇧 UK
+                        <button class="refresh-button" onclick="loadRegional('GB')">↻</button>
                     </div>
                     <div id="ukResults" class="song-list">
                         <div class="loading">
                             <div class="spinner"></div>
-                            Loading popular music in UK...
+                           
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="player" id="player">
-            <div class="player-controls">
-                <div class="now-playing" id="nowPlaying">No song selected</div>
-                <audio controls id="audioPlayer">
-                    Your browser does not support the audio element.
-                </audio>
-                <button class="play-button" onclick="closePlayer()">Close</button>
             </div>
         </div>
     </div>
@@ -582,9 +799,14 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
         let nextSong = null;
         let isAutoplayEnabled = true;
         let songQueue = [];
+        let isPlaying = false;
+        let isDragging = false;
 
         // YouTube API configuration
         const YOUTUBE_API_BASE = 'https://www.googleapis.com/youtube/v3';
+
+        // Get audio element
+        const audioPlayer = document.getElementById('audioPlayer');
 
         // Request configuration on load
         vscode.postMessage({ type: 'getConfig' });
@@ -601,6 +823,126 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
                     }
                     break;
             }
+        });
+
+        // Initialize audio event listeners
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            updateTimeDisplay();
+        });
+
+        audioPlayer.addEventListener('timeupdate', () => {
+            if (!isDragging) {
+                updateSeekBar();
+                updateTimeDisplay();
+            }
+        });
+
+        audioPlayer.addEventListener('ended', handleSongEnded);
+        audioPlayer.addEventListener('play', () => {
+            isPlaying = true;
+            updatePlayPauseButton();
+        });
+
+        audioPlayer.addEventListener('pause', () => {
+            isPlaying = false;
+            updatePlayPauseButton();
+        });
+
+        // Custom Controls Functions
+        function togglePlayPause() {
+            if (audioPlayer.src) {
+                if (isPlaying) {
+                    audioPlayer.pause();
+                } else {
+                    audioPlayer.play().catch(error => {
+                        vscode.postMessage({
+                            type: 'error',
+                            text: \`Error playing audio: \${error.message}\`
+                        });
+                    });
+                }
+            }
+        }
+
+        function playNext() {
+            if (nextSong && nextSong.preloadElement) {
+                // Play the preloaded next song
+                handleSongEnded();
+            } else if (songQueue.length > 0) {
+                // Play first song in queue
+                const nextInQueue = songQueue[0];
+                playSong(nextInQueue.id, nextInQueue.title, nextInQueue.artist, nextInQueue.thumbnail);
+            } else {
+                vscode.postMessage({
+                    type: 'info',
+                    text: 'No next song available'
+                });
+            }
+        }
+
+        function updatePlayPauseButton() {
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            playPauseBtn.textContent = isPlaying ? '⏸' : '▶';
+        }
+
+        function updateTimeDisplay() {
+            const timeDisplay = document.getElementById('timeDisplay');
+            const current = formatTime(audioPlayer.currentTime || 0);
+            const duration = formatTime(audioPlayer.duration || 0);
+            timeDisplay.textContent = \`\${current} / \${duration}\`;
+        }
+
+        function updateSeekBar() {
+            if (audioPlayer.duration) {
+                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                document.getElementById('seekBarProgress').style.width = progress + '%';
+            }
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return \`\${mins}:\${secs.toString().padStart(2, '0')}\`;
+        }
+
+        // Improved Seek Bar Functionality
+        const seekBarContainer = document.getElementById('seekBarContainer');
+        const seekBarProgress = document.getElementById('seekBarProgress');
+        const seekBarHandle = document.getElementById('seekBarHandle');
+
+        seekBarContainer.addEventListener('click', (e) => {
+            if (!audioPlayer.duration || isDragging) return;
+            
+            const rect = seekBarContainer.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            const newTime = percent * audioPlayer.duration;
+            audioPlayer.currentTime = Math.max(0, Math.min(newTime, audioPlayer.duration));
+            updateSeekBar();
+            updateTimeDisplay();
+        });
+
+        seekBarHandle.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging && audioPlayer.duration) {
+                const rect = seekBarContainer.getBoundingClientRect();
+                const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                seekBarProgress.style.width = (percent * 100) + '%';
+            }
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            if (isDragging && audioPlayer.duration) {
+                const rect = seekBarContainer.getBoundingClientRect();
+                const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                audioPlayer.currentTime = percent * audioPlayer.duration;
+                updateTimeDisplay();
+            }
+            isDragging = false;
         });
 
         function checkApiKey() {
@@ -650,10 +992,7 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
                 return;
             }
 
-            // Reset the loaded flag to allow refresh
             trendingLoaded = false;
-
-            // Find the trending container more reliably
             let container = document.querySelector('#trending .section');
             if (!container) {
                 container = document.getElementById('trending');
@@ -661,7 +1000,7 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
                 container = container.querySelector('.section');
             }
             
-            container.innerHTML = '<div class="loading"><div class="spinner"></div>Loading trending music...</div>';
+            container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
 
             try {
                 const response = await fetch(
@@ -681,7 +1020,7 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
                 container.innerHTML = \`
                     <div class="section-title">
                         🔥 Trending Music
-                        <button class="refresh-button" onclick="loadTrending()">Refresh</button>
+                        <button class="refresh-button" onclick="loadTrending()">↻</button>
                     </div>
                     <div class="song-list"></div>
                 \`;
@@ -722,7 +1061,7 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
 
             const containerId = regionCode === 'IN' ? 'indiaResults' : 'ukResults';
             const container = document.getElementById(containerId);
-            container.innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>';
+            container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
 
             try {
                 const response = await fetch(
@@ -778,7 +1117,7 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
             }
 
             const resultsContainer = document.getElementById('searchResults');
-            resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div>Searching...</div>';
+            resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
             
             searchButton.disabled = true;
             searchButton.textContent = 'Searching...';
@@ -868,31 +1207,39 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
                     \${duration}
                     \${viewCount}
                 </div>
-                <button class="play-button" onclick="playSong('\${song.id}', '\${song.title.replace(/'/g, "\\'")}', '\${song.artist.replace(/'/g, "\\'")}')">Play</button>
+                <button class="play-button" onclick="playSong('\${song.id}', '\${song.title.replace(/'/g, "\\'")}', '\${song.artist.replace(/'/g, "\\'")}', '\${song.thumbnail}')">▶</button>
             \`;
             return item;
         }
 
-        function playSong(videoId, title, artist) {
+        function playSong(videoId, title, artist, thumbnail = '') {
             const streamUrl = \`http://localhost:3000/stream/\${videoId}\`;
-            const audioPlayer = document.getElementById('audioPlayer');
-            const player = document.getElementById('player');
-            const nowPlaying = document.getElementById('nowPlaying');
+            const miniPlayer = document.getElementById('miniPlayer');
+            const miniPlayerTitle = document.getElementById('miniPlayerTitle');
+            const miniPlayerArtist = document.getElementById('miniPlayerArtist');
+            const miniPlayerThumbnail = document.getElementById('miniPlayerThumbnail');
+            const seekBarContainer = document.getElementById('seekBarContainer');
 
             // Store current song info
-            currentSong = { id: videoId, title, artist };
+            currentSong = { id: videoId, title, artist, thumbnail };
 
+            // Update mini player UI
             audioPlayer.src = streamUrl;
-            nowPlaying.textContent = \`\${title} - \${artist}\`;
-            player.classList.add('active');
+            miniPlayerTitle.textContent = title;
+            miniPlayerArtist.textContent = artist;
+            if (thumbnail) {
+                miniPlayerThumbnail.src = thumbnail;
+                miniPlayerThumbnail.style.display = 'block';
+            } else {
+                miniPlayerThumbnail.style.display = 'none';
+            }
+            
+            miniPlayer.classList.add('active');
+            seekBarContainer.classList.add('active');
 
-            // Remove any existing event listeners to avoid duplicates
-            audioPlayer.removeEventListener('ended', handleSongEnded);
-            audioPlayer.removeEventListener('loadstart', handleSongLoadStart);
-
-            // Add event listeners for autoplay
-            audioPlayer.addEventListener('ended', handleSongEnded);
-            audioPlayer.addEventListener('loadstart', handleSongLoadStart);
+            // Reset seek bar
+            document.getElementById('seekBarProgress').style.width = '0%';
+            document.getElementById('timeDisplay').textContent = '0:00 / 0:00';
 
             // Notify extension about now playing
             vscode.postMessage({
@@ -915,11 +1262,11 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
             }
         }
 
-        async function findAndPreloadNext(title, artist, videoId) {
+        async function findAndPreloadNext(currentTitle, currentArtist, currentVideoId) {
             try {
-                console.log(\`🔍 Finding similar songs for: \${title} by \${artist}\`);
+                console.log(\`🔍 Finding similar songs for: \${currentTitle} by \${currentArtist}\`);
                 
-                const similarSongs = await findSimilarSongs(title, artist, videoId);
+                const similarSongs = await findSimilarSongs(currentTitle, currentArtist, currentVideoId);
                 
                 if (similarSongs.length > 0) {
                     // Add to queue and preload the first one
@@ -953,14 +1300,23 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
                 currentAudioPlayer.currentTime = 0;
                 
                 // Update UI
-                const nowPlaying = document.getElementById('nowPlaying');
-                nowPlaying.textContent = \`\${nextSong.title} - \${nextSong.artist}\`;
+                const miniPlayerTitle = document.getElementById('miniPlayerTitle');
+                const miniPlayerArtist = document.getElementById('miniPlayerArtist');
+                const miniPlayerThumbnail = document.getElementById('miniPlayerThumbnail');
+                
+                miniPlayerTitle.textContent = nextSong.title;
+                miniPlayerArtist.textContent = nextSong.artist;
+                if (nextSong.thumbnail) {
+                    miniPlayerThumbnail.src = nextSong.thumbnail;
+                    miniPlayerThumbnail.style.display = 'block';
+                }
                 
                 // Update current song
                 currentSong = {
                     id: nextSong.id,
                     title: nextSong.title,
-                    artist: nextSong.artist
+                    artist: nextSong.artist,
+                    thumbnail: nextSong.thumbnail
                 };
 
                 // Notify extension
@@ -998,87 +1354,6 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
                 }
             }
         }
-
-        function handleSongLoadStart() {
-            console.log('🎵 Song loading started');
-        }
-
-        function closePlayer() {
-            const audioPlayer = document.getElementById('audioPlayer');
-            const player = document.getElementById('player');
-            const nextSongElement = document.getElementById('nextSongInfo');
-            const preloadAudio = document.getElementById('preloadAudio');
-
-            // Stop and clean up main audio
-            audioPlayer.pause();
-            audioPlayer.src = '';
-            
-            // Clean up preloaded audio
-            if (preloadAudio) {
-                preloadAudio.pause();
-                preloadAudio.src = '';
-            }
-            
-            // Hide player and next song info
-            player.classList.remove('active');
-            if (nextSongElement) {
-                nextSongElement.style.display = 'none';
-            }
-
-            // Reset autoplay state
-            currentSong = null;
-            nextSong = null;
-            songQueue = [];
-
-            // Remove event listeners
-            audioPlayer.removeEventListener('ended', handleSongEnded);
-            audioPlayer.removeEventListener('loadstart', handleSongLoadStart);
-
-            // Notify extension that playback stopped
-            vscode.postMessage({
-                type: 'stopped'
-            });
-        }
-
-        function formatDuration(duration) {
-            if (!duration) return '';
-            
-            // Parse ISO 8601 duration (PT4M13S)
-            const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
-            if (!match) return '';
-            
-            const hours = (match[1] || '').replace('H', '');
-            const minutes = (match[2] || '').replace('M', '');
-            const seconds = (match[3] || '').replace('S', '');
-            
-            if (hours) {
-                return \`\${hours}:\${minutes.padStart(2, '0')}:\${seconds.padStart(2, '0')}\`;
-            } else {
-                return \`\${minutes || '0'}:\${seconds.padStart(2, '0')}\`;
-            }
-        }
-
-        function formatNumber(num) {
-            if (num >= 1000000) {
-                return (num / 1000000).toFixed(1) + 'M';
-            } else if (num >= 1000) {
-                return (num / 1000).toFixed(1) + 'K';
-            }
-            return num;
-        }
-
-        // Handle Enter key in search input
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchMusic();
-            }
-        });
-
-        // Show info about streaming server
-        vscode.postMessage({
-            type: 'info',
-            text: 'YouTube Music Streamer loaded! Configure your API key in settings to fetch real YouTube data.'
-        });
 
         async function findSimilarSongs(currentTitle, currentArtist, currentVideoId) {
             if (!config.apiKey) {
@@ -1169,37 +1444,53 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
         }
 
         function updateNextSongUI(song) {
-            let nextSongElement = document.getElementById('nextSongInfo');
-            if (!nextSongElement) {
-                // Create next song info element
-                const player = document.getElementById('player');
-                if (player) {
-                    nextSongElement = document.createElement('div');
-                    nextSongElement.id = 'nextSongInfo';
-                    nextSongElement.className = 'next-song-info';
-                    nextSongElement.innerHTML = \`
-                        <div class="next-song-label">Up Next:</div>
-                        <div class="next-song-details">
-                            <img class="next-song-thumb" src="" alt="Next song">
-                            <div class="next-song-text">
-                                <div class="next-song-title"></div>
-                                <div class="next-song-artist"></div>
-                            </div>
-                            <button class="autoplay-toggle" onclick="toggleAutoplay()" title="Toggle Autoplay">
-                                <span id="autoplayIcon">🔄</span>
-                            </button>
-                        </div>
-                    \`;
-                    player.appendChild(nextSongElement);
-                }
-            }
-
+            const nextSongElement = document.getElementById('nextSongInfo');
             if (nextSongElement && song) {
                 nextSongElement.querySelector('.next-song-thumb').src = song.thumbnail;
                 nextSongElement.querySelector('.next-song-title').textContent = song.title;
                 nextSongElement.querySelector('.next-song-artist').textContent = song.artist;
                 nextSongElement.style.display = 'block';
             }
+        }
+
+        function closePlayer() {
+            const miniPlayer = document.getElementById('miniPlayer');
+            const nextSongElement = document.getElementById('nextSongInfo');
+            const preloadAudio = document.getElementById('preloadAudio');
+            const seekBarContainer = document.getElementById('seekBarContainer');
+
+            // Stop and clean up main audio
+            audioPlayer.pause();
+            audioPlayer.src = '';
+            
+            // Clean up preloaded audio
+            if (preloadAudio) {
+                preloadAudio.pause();
+                preloadAudio.src = '';
+            }
+            
+            // Hide player and seek bar
+            miniPlayer.classList.remove('active');
+            seekBarContainer.classList.remove('active');
+            if (nextSongElement) {
+                nextSongElement.style.display = 'none';
+            }
+
+            // Reset UI
+            document.getElementById('seekBarProgress').style.width = '0%';
+            document.getElementById('timeDisplay').textContent = '0:00 / 0:00';
+            updatePlayPauseButton();
+
+            // Reset autoplay state
+            currentSong = null;
+            nextSong = null;
+            songQueue = [];
+            isPlaying = false;
+
+            // Notify extension that playback stopped
+            vscode.postMessage({
+                type: 'stopped'
+            });
         }
 
         function toggleAutoplay() {
@@ -1215,6 +1506,46 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
                 text: \`Autoplay \${isAutoplayEnabled ? 'enabled' : 'disabled'}\`
             });
         }
+
+        function formatDuration(duration) {
+            if (!duration) return '';
+            
+            // Parse ISO 8601 duration (PT4M13S)
+            const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+            if (!match) return '';
+            
+            const hours = (match[1] || '').replace('H', '');
+            const minutes = (match[2] || '').replace('M', '');
+            const seconds = (match[3] || '').replace('S', '');
+            
+            if (hours) {
+                return \`\${hours}:\${minutes.padStart(2, '0')}:\${seconds.padStart(2, '0')}\`;
+            } else {
+                return \`\${minutes || '0'}:\${seconds.padStart(2, '0')}\`;
+            }
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num;
+        }
+
+        // Handle Enter key in search input
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchMusic();
+            }
+        });
+
+        // Show info about streaming server
+        vscode.postMessage({
+            type: 'info',
+            text: 'YouTube Music Streamer loaded! Configure your API key in settings to fetch real YouTube data.'
+        });
     </script>
 </body>
 </html>`;
