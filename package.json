@@ -2,8 +2,12 @@
   "name": "youtube-music-streamer",
   "displayName": "YouTube Music Streamer",
   "description": "Stream YouTube music directly inside VS Code with custom audio backend",
-  "version": "1.0.0",
-  "publisher": "your-publisher-name",
+  "version": "1.0.1",
+  "publisher": "pranoybiswaas",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pranoy1994/youtube-music-vscode.git"
+  },
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -19,10 +23,21 @@
     "audio"
   ],
   "activationEvents": [
-    "onCommand:youtubeMusicStreamer.openPlayer"
+    "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "type": "webview",
+          "id": "youtube-music-player",
+          "name": "YouTube Music Player",
+          "when": "true",
+          "visibility": "visible"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "youtubeMusicStreamer.openPlayer",
@@ -31,11 +46,20 @@
         "icon": "$(play)"
       },
       {
-        "command": "youtubeMusicStreamer.togglePlayer",
-        "title": "Toggle Music Player",
-        "category": "YouTube Music Streamer"
+        "command": "youtubeMusicStreamer.refreshPlayer",
+        "title": "Refresh",
+        "icon": "$(refresh)"
       }
     ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "youtubeMusicStreamer.refreshPlayer",
+          "when": "view == youtube-music-player",
+          "group": "navigation"
+        }
+      ]
+    },
     "keybindings": [
       {
         "command": "youtubeMusicStreamer.openPlayer",

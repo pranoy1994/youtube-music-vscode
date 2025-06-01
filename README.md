@@ -9,6 +9,7 @@ A feature-rich VS Code extension that lets you stream YouTube music directly ins
 
 - **🔥 Real YouTube Data**: Fetches trending, search results, and regional content using YouTube API v3
 - **🎵 Three Music Tabs**: Trending, Search, and Regional (India/UK)
+- **📋 Always Visible Sidebar**: Extension panel always visible in VS Code's left sidebar
 - **🎮 Status Bar Integration**: Music player status and controls in VS Code status bar
 - **🔍 YouTube Search**: Search for any music directly within VS Code with real results
 - **📻 Audio Streaming**: Stream audio from `localhost:3000/stream/<youtube_id>`
@@ -393,6 +394,41 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **API Usage**: Only accesses publicly available data
 - **No Data Storage**: Extension doesn't store personal data
 - **Privacy**: Only API key is stored locally in VS Code settings
+
+## 📋 Sidebar Integration
+
+The extension features a **simple sidebar view** that integrates directly into VS Code's **Explorer panel**. The extension automatically adds one clean section to your Explorer:
+
+### 🎵 YouTube Music Player
+
+The sidebar view contains four simple options:
+- **🎵 Open Music Player**: Launch the main music player interface
+- **🔍 Search Music**: Open player to search for songs and artists  
+- **🔥 Trending Music**: Open player to browse trending content
+- **🌍 Regional Music**: Open player to explore regional music
+
+### How It Works
+
+1. **Simple Integration**: One clean "YouTube Music Player" section appears in your Explorer panel
+2. **Click to Open**: Any option opens the full webview player with all functionality
+3. **Always Visible**: The sidebar section stays visible alongside your files
+4. **One-Click Access**: No complex navigation - just click any option to start
+
+### How to Access
+
+1. **Automatic Integration**: The "YouTube Music Player" section appears automatically in your **Explorer** tab when you install the extension
+2. **Explorer Panel**: Open the Explorer panel (`Ctrl+Shift+E` / `Cmd+Shift+E`) to see the YouTube Music section
+3. **Click Any Option**: Click any of the four options to open the full music player
+4. **Status Bar**: Alternative access via the music icon in VS Code's status bar
+
+### Key Benefits
+
+- **🎯 Minimal Design**: Clean, simple sidebar with just one section
+- **🚀 Quick Launch**: One click opens the full music player
+- **📱 No Clutter**: Doesn't overcrowd your sidebar with multiple sections
+- **🔄 Always Available**: Persistent access without taking extra space
+
+The simplified sidebar ensures you have quick access to the music player without cluttering your workspace!
 
 ---
 
