@@ -3,7 +3,7 @@
 Stream YouTube music directly inside VS Code with a beautiful, integrated music player.
 
 ![YouTube Music Streamer](https://img.shields.io/badge/VS%20Code-Extension-blue.svg)
-![Version](https://img.shields.io/badge/version-1.0.2-green.svg)
+![Version](https://img.shields.io/badge/version-1.0.3-green.svg)
 
 ## 📸 Screenshot
 
