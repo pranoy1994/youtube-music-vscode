@@ -104,10 +104,4 @@ Stream YouTube music directly inside VS Code with a beautiful, integrated music 
 - Free YouTube Data API v3 key
 - Internet connection
 
-## 📞 Support
-
-Having issues? Check out our [GitHub repository](https://github.com/your-username/youtube-music-streamer) for support and updates.
-
----
-
 **Transform your coding experience with music! 🎵✨** 
