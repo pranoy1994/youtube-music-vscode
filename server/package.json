@@ -1,0 +1,27 @@
+{
+  "name": "youtube-music-server",
+  "version": "1.0.0",
+  "description": "Sample YouTube audio streaming server for YouTube Music Streamer VS Code extension",
+  "main": "server.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "youtube",
+    "music",
+    "streaming",
+    "audio",
+    "vscode"
+  ],
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "ytdl-core": "^4.11.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "author": "Your Name",
+  "license": "MIT"
+}

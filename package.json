@@ -1,0 +1,97 @@
+{
+  "name": "youtube-music-streamer",
+  "displayName": "YouTube Music Streamer",
+  "description": "Stream YouTube music directly inside VS Code with custom audio backend",
+  "version": "1.0.0",
+  "publisher": "your-publisher-name",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "youtube",
+    "music",
+    "player",
+    "streaming",
+    "entertainment",
+    "audio"
+  ],
+  "activationEvents": [
+    "onCommand:youtubeMusicStreamer.openPlayer"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "youtubeMusicStreamer.openPlayer",
+        "title": "Open YouTube Music Player",
+        "category": "YouTube Music Streamer",
+        "icon": "$(play)"
+      },
+      {
+        "command": "youtubeMusicStreamer.togglePlayer",
+        "title": "Toggle Music Player",
+        "category": "YouTube Music Streamer"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "youtubeMusicStreamer.openPlayer",
+        "key": "ctrl+shift+y",
+        "mac": "cmd+shift+y"
+      }
+    ],
+    "configuration": {
+      "title": "YouTube Music Streamer",
+      "properties": {
+        "youtubeMusicStreamer.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "YouTube Data API v3 key for fetching music data",
+          "order": 1
+        },
+        "youtubeMusicStreamer.maxResults": {
+          "type": "number",
+          "default": 25,
+          "minimum": 5,
+          "maximum": 50,
+          "description": "Maximum number of results to fetch per request",
+          "order": 2
+        },
+        "youtubeMusicStreamer.region": {
+          "type": "string",
+          "default": "US",
+          "description": "Region code for localized content (e.g., US, IN, GB)",
+          "order": 3
+        },
+        "youtubeMusicStreamer.autoStart": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically open the player when VS Code starts",
+          "order": 4
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.60.0",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
+    "eslint": "^8.20.0",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+} 
