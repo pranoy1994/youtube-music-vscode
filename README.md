@@ -7,7 +7,7 @@ Stream YouTube music directly inside VS Code with a beautiful, integrated music 
 
 ## 📸 Screenshot
 
-<img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/screenshot.png" alt="YouTube Music Streamer Screenshot" width="600" height="400">
+<img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/screenshot.png" alt="YouTube Music Streamer Screenshot" width="600" height="400" style="object-fit: contain;">
 
 *Stream YouTube music directly in your VS Code workspace with an integrated player, trending music, search functionality, and smart autoplay features.*
 
