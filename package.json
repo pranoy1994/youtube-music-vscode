@@ -2,7 +2,7 @@
   "name": "youtube-music-streamer",
   "displayName": "YouTube Music Streamer",
   "description": "Stream YouTube music directly inside VS Code with custom audio backend",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "publisher": "pranoybiswaas",
   "icon": "icon.png",
   "repository": {
@@ -71,31 +71,25 @@
     "configuration": {
       "title": "YouTube Music Streamer",
       "properties": {
-        "youtubeMusicStreamer.apiKey": {
-          "type": "string",
-          "default": "",
-          "description": "YouTube Data API v3 key for fetching music data",
-          "order": 1
-        },
         "youtubeMusicStreamer.maxResults": {
           "type": "number",
           "default": 25,
           "minimum": 5,
           "maximum": 50,
           "description": "Maximum number of results to fetch per request",
-          "order": 2
+          "order": 1
         },
         "youtubeMusicStreamer.region": {
           "type": "string",
           "default": "US",
           "description": "Region code for localized content (e.g., US, IN, GB)",
-          "order": 3
+          "order": 2
         },
         "youtubeMusicStreamer.autoStart": {
           "type": "boolean",
           "default": false,
           "description": "Automatically open the player when VS Code starts",
-          "order": 4
+          "order": 3
         }
       }
     }

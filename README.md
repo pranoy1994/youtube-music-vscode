@@ -35,17 +35,8 @@ Stream YouTube music directly inside VS Code with a beautiful, integrated music 
 
 ### Setup
 
-1. **Get YouTube API Key** (Free):
-   - Visit [Google Cloud Console](https://console.cloud.google.com/)
-   - Create a project and enable "YouTube Data API v3"
-   - Generate an API key
-
-2. **Configure in VS Code**:
-   - Open Settings (`Ctrl+,` or `Cmd+,`)
-   - Search for "YouTube Music Streamer"
-   - Enter your API key
-
-3. **Start Using**:
+1. **Ready to Use**: No setup required! The extension works immediately after installation
+2. **Start Using**:
    - Press `Ctrl+Shift+Y` (or `Cmd+Shift+Y` on Mac)
    - Or click the music icon in your status bar
    - Or use the YouTube Music section in Explorer panel
@@ -77,18 +68,18 @@ Stream YouTube music directly inside VS Code with a beautiful, integrated music 
 
 | Setting | Description |
 |---------|-------------|
-| **API Key** | Your YouTube Data API v3 key (required) |
 | **Max Results** | Number of songs to load (5-50) |
 | **Region** | Region for trending content (US, IN, GB, etc.) |
 | **Auto Start** | Open player automatically when VS Code starts |
 
 ## 🎵 What You Get
 
-- **Real YouTube Content**: Access to YouTube's entire music library
+- **Full Music Library**: Access to YouTube's entire music collection
+- **No Setup Required**: Works immediately after installation
 - **Always Available**: Music player integrated into your coding workspace
 - **Smart Recommendations**: Discover new music similar to what you like
 - **Distraction-Free**: Clean interface that doesn't interrupt your workflow
-- **Free to Use**: Only requires a free YouTube API key
+- **Completely Free**: No additional accounts or subscriptions required
 
 ## 📋 Quick Tips
 
@@ -101,7 +92,6 @@ Stream YouTube music directly inside VS Code with a beautiful, integrated music 
 ## 🛠️ Requirements
 
 - VS Code version 1.60.0 or higher
-- Free YouTube Data API v3 key
 - Internet connection
 
 **Transform your coding experience with music! 🎵✨** 
