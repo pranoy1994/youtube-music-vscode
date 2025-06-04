@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https: data:; script-src 'unsafe-inline'; style-src 'unsafe-inline'; media-src http: https: data:; connect-src https: http:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https: data: vscode-resource:; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; media-src https: data: blob:; connect-src https: wss:; font-src 'self' data: https:; child-src 'none'; frame-src 'none';">
     <title>YouTube Music Player</title>
     <style>
         body {
@@ -566,6 +566,23 @@
     </div>
 
     <script>
+        // Global error handling
+        window.addEventListener('error', function(e) {
+            console.error('Global error caught:', e.error);
+            vscode.postMessage({ 
+                type: 'error', 
+                text: `JavaScript error: ${e.error?.message || 'Unknown error'}` 
+            });
+        });
+
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('Unhandled promise rejection:', e.reason);
+            vscode.postMessage({ 
+                type: 'error', 
+                text: `Promise rejection: ${e.reason?.message || 'Unknown error'}` 
+            });
+        });
+
         const vscode = acquireVsCodeApi();
         let currentTab = 'trending';
         let config = { maxResults: 25, region: 'US' };
@@ -583,8 +600,18 @@
         const audioPlayer = document.getElementById('audioPlayer');
         const preloadAudio = document.getElementById('preloadAudio');
 
+        // Ensure elements exist before using them
+        if (!audioPlayer || !preloadAudio) {
+            console.error('Required audio elements not found');
+            vscode.postMessage({ type: 'error', text: 'Audio elements not found' });
+        }
+
         // Request configuration on load
-        vscode.postMessage({ type: 'getConfig' });
+        try {
+            vscode.postMessage({ type: 'getConfig' });
+        } catch (error) {
+            console.error('Failed to request config:', error);
+        }
 
         // Handle messages from extension
         window.addEventListener('message', event => {
