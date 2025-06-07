@@ -733,7 +733,9 @@ class YouTubeMusicViewProvider implements vscode.WebviewViewProvider {
                 handleSongEnded();
             } else if (songQueue.length > 0) {
                 const nextInQueue = songQueue[0];
-                playSong(nextInQueue.id, nextInQueue.title, nextInQueue.artist, nextInQueue.thumbnail);
+                playSong(nextInQueue.id, nextInQueue.title, nextInQueue.artist, nextInQueue.thumbnail).catch(error => {
+                    console.error('Error playing next song:', error);
+                });
             }
         }
 
@@ -926,18 +928,76 @@ class YouTubeMusicViewProvider implements vscode.WebviewViewProvider {
             }
         }
 
+        // Helper function to try preloading a stream with retry logic
+        async function tryPreloadStream(prioritizedStreams, streamIndex, song) {
+            if (streamIndex >= prioritizedStreams.length) {
+                throw new Error('All preload streams failed to load');
+            }
+
+            const currentStream = prioritizedStreams[streamIndex];
+            const streamUrl = currentStream.url;
+
+            console.log(\`🔄 Trying preload stream \${streamIndex + 1}/\${prioritizedStreams.length}: \${currentStream.codec} - \${currentStream.quality} (\${currentStream.bitrate} bps)\`);
+
+            return new Promise((resolve, reject) => {
+                const tempPreloadAudio = new Audio();
+                
+                tempPreloadAudio.oncanplaythrough = () => {
+                    console.log(\`✅ Preload stream \${streamIndex + 1} loaded successfully: \${currentStream.codec} - \${currentStream.quality}\`);
+                    resolve({ streamUrl, stream: currentStream });
+                };
+
+                tempPreloadAudio.onerror = () => {
+                    console.warn(\`❌ Preload stream \${streamIndex + 1} failed, trying next...\`);
+                    tryPreloadStream(prioritizedStreams, streamIndex + 1, song)
+                        .then(resolve)
+                        .catch(reject);
+                };
+
+                tempPreloadAudio.ontimeout = () => {
+                    console.warn(\`⏰ Preload stream \${streamIndex + 1} timed out, trying next...\`);
+                    tryPreloadStream(prioritizedStreams, streamIndex + 1, song)
+                        .then(resolve)
+                        .catch(reject);
+                };
+
+                // Set a timeout for preloading
+                setTimeout(() => {
+                    if (tempPreloadAudio.readyState < 3) { // HAVE_FUTURE_DATA
+                        tempPreloadAudio.ontimeout();
+                    }
+                }, 8000); // 8 second timeout for preload
+
+                tempPreloadAudio.src = streamUrl;
+                tempPreloadAudio.load();
+            });
+        }
+
         async function preloadNextSong(song) {
             if (!song) return;
 
             try {
-                const streamUrl = \`https://stream.sharecodelive.com/stream/\${song.id}\`;
-                preloadAudio.src = streamUrl;
+                const streamResponse = await fetch(\`https://api.codetabs.com/v1/proxy/?quest=https://ytify.pp.ua/streams/\${song.id}\`);
+                const streamData = await streamResponse.json();
                 
-                console.log(\`🔄 Preloading next song: \${song.title}\`);
-                
-                preloadAudio.load();
-                nextSong = { ...song, preloadElement: preloadAudio };
-                updateNextSongUI(song);
+                if (streamData.audioStreams && streamData.audioStreams.length > 0) {
+                    // Get prioritized streams list
+                    const prioritizedStreams = getPrioritizedStreams(streamData.audioStreams);
+                    
+                    console.log(\`🔄 Found \${prioritizedStreams.length} preload streams, trying in order...\`);
+                    
+                    // Try streams in order until one works
+                    const { streamUrl, stream: workingStream } = await tryPreloadStream(prioritizedStreams, 0, song);
+                    
+                    preloadAudio.src = streamUrl;
+                    console.log(\`🔄 Preloading next song: \${song.title} (Final: \${workingStream.codec}, Quality: \${workingStream.quality}, Bitrate: \${workingStream.bitrate} bps)\`);
+                    
+                    preloadAudio.load();
+                    nextSong = { ...song, preloadElement: preloadAudio, workingStream };
+                    updateNextSongUI(song);
+                } else {
+                    console.warn('No audio streams found for preload song:', song.title);
+                }
 
             } catch (error) {
                 console.warn('Error preloading next song:', error);
@@ -1155,47 +1215,137 @@ class YouTubeMusicViewProvider implements vscode.WebviewViewProvider {
                     <div class="song-title">\${song.title}</div>
                     <div class="song-artist">\${song.artist}</div>
                 </div>
-                <button class="play-button" onclick="playSong('\${song.id}', '\${song.title.replace(/'/g, "\\\\'")}', '\${song.artist.replace(/'/g, "\\\\'")}', '\${song.thumbnail}')">▶</button>
+                <button class="play-button" onclick="playSong('\${song.id}', '\${song.title.replace(/'/g, "\\\\'")}', '\${song.artist.replace(/'/g, "\\\\'")}', '\${song.thumbnail}').catch(e => console.error('Play error:', e))">▶</button>
             \`;
             return item;
         }
 
-        function playSong(videoId, title, artist, thumbnail = '') {
-            const streamUrl = \`https://stream.sharecodelive.com/stream/\${videoId}\`;
-            const miniPlayer = document.getElementById('miniPlayer');
-            const miniPlayerTitle = document.getElementById('miniPlayerTitle');
-            const miniPlayerArtist = document.getElementById('miniPlayerArtist');
-            const miniPlayerThumbnail = document.getElementById('miniPlayerThumbnail');
-            const seekBarContainer = document.getElementById('seekBarContainer');
+        // Helper function to create prioritized stream list
+        function getPrioritizedStreams(audioStreams) {
+            const opusStreams = audioStreams.filter(stream => stream.codec === 'opus').sort((a, b) => b.bitrate - a.bitrate);
+            const otherStreams = audioStreams.filter(stream => stream.codec !== 'opus').sort((a, b) => b.bitrate - a.bitrate);
+            return [...opusStreams, ...otherStreams];
+        }
 
-            currentSong = { id: videoId, title, artist, thumbnail };
-
-            audioPlayer.src = streamUrl;
-            miniPlayerTitle.textContent = title;
-            miniPlayerArtist.textContent = artist;
-            if (thumbnail) {
-                miniPlayerThumbnail.src = thumbnail;
+        // Helper function to try playing a stream with retry logic
+        async function tryPlayStream(prioritizedStreams, streamIndex, videoId, title, artist, thumbnail) {
+            if (streamIndex >= prioritizedStreams.length) {
+                throw new Error('All audio streams failed to load');
             }
-            
-            miniPlayer.classList.add('active');
-            seekBarContainer.classList.add('active');
 
-            document.getElementById('seekBarProgress').style.width = '0%';
-            document.getElementById('timeDisplay').textContent = '0:00 / 0:00';
+            const currentStream = prioritizedStreams[streamIndex];
+            const streamUrl = currentStream.url;
 
-            vscode.postMessage({
-                type: 'nowPlaying',
-                title: title,
-                artist: artist,
-                videoId: videoId
+            console.log(\`🎵 Trying stream \${streamIndex + 1}/\${prioritizedStreams.length}: \${currentStream.codec} - \${currentStream.quality} (\${currentStream.bitrate} bps)\`);
+
+            return new Promise((resolve, reject) => {
+                const tempAudio = new Audio();
+                
+                tempAudio.oncanplaythrough = () => {
+                    console.log(\`✅ Stream \${streamIndex + 1} loaded successfully: \${currentStream.codec} - \${currentStream.quality}\`);
+                    resolve({ streamUrl, stream: currentStream });
+                };
+
+                tempAudio.onerror = () => {
+                    console.warn(\`❌ Stream \${streamIndex + 1} failed, trying next...\`);
+                    tryPlayStream(prioritizedStreams, streamIndex + 1, videoId, title, artist, thumbnail)
+                        .then(resolve)
+                        .catch(reject);
+                };
+
+                tempAudio.ontimeout = () => {
+                    console.warn(\`⏰ Stream \${streamIndex + 1} timed out, trying next...\`);
+                    tryPlayStream(prioritizedStreams, streamIndex + 1, videoId, title, artist, thumbnail)
+                        .then(resolve)
+                        .catch(reject);
+                };
+
+                // Set a timeout for loading
+                setTimeout(() => {
+                    if (tempAudio.readyState < 3) { // HAVE_FUTURE_DATA
+                        tempAudio.ontimeout();
+                    }
+                }, 10000); // 10 second timeout
+
+                tempAudio.src = streamUrl;
+                tempAudio.load();
             });
+        }
 
-            audioPlayer.play().catch(error => {
-                console.error('Error playing audio:', error);
-            });
+        async function playSong(videoId, title, artist, thumbnail = '') {
+            try {
+                // Show loading state
+                const miniPlayer = document.getElementById('miniPlayer');
+                const miniPlayerTitle = document.getElementById('miniPlayerTitle');
+                const miniPlayerArtist = document.getElementById('miniPlayerArtist');
+                const miniPlayerThumbnail = document.getElementById('miniPlayerThumbnail');
+                const seekBarContainer = document.getElementById('seekBarContainer');
 
-            if (isAutoplayEnabled) {
-                findAndPreloadNext(title, artist, videoId);
+                // Set loading state
+                miniPlayerTitle.textContent = 'Loading...';
+                miniPlayerArtist.textContent = title;
+                if (thumbnail) {
+                    miniPlayerThumbnail.src = thumbnail;
+                }
+                miniPlayer.classList.add('active');
+                seekBarContainer.classList.add('active');
+
+                const streamResponse = await fetch(\`https://api.codetabs.com/v1/proxy/?quest=https://ytify.pp.ua/streams/\${videoId}\`);
+                
+                if (!streamResponse.ok) {
+                    throw new Error(\`Stream API returned \${streamResponse.status}: \${streamResponse.statusText}\`);
+                }
+                
+                const streamData = await streamResponse.json();
+                
+                if (streamData.audioStreams && streamData.audioStreams.length > 0) {
+                    // Get prioritized streams list
+                    const prioritizedStreams = getPrioritizedStreams(streamData.audioStreams);
+                    
+                    console.log(\`🔍 Found \${prioritizedStreams.length} audio streams, trying in order...\`);
+                    
+                    // Try streams in order until one works
+                    const { streamUrl, stream: workingStream } = await tryPlayStream(prioritizedStreams, 0, videoId, title, artist, thumbnail);
+                    
+                    currentSong = { id: videoId, title, artist, thumbnail };
+
+                    audioPlayer.src = streamUrl;
+                    miniPlayerTitle.textContent = title;
+                    miniPlayerArtist.textContent = artist;
+
+                    document.getElementById('seekBarProgress').style.width = '0%';
+                    document.getElementById('timeDisplay').textContent = '0:00 / 0:00';
+
+                    vscode.postMessage({
+                        type: 'nowPlaying',
+                        title: title,
+                        artist: artist,
+                        videoId: videoId
+                    });
+
+                    console.log(\`🎵 Playing: \${title} (Final: \${workingStream.codec}, Quality: \${workingStream.quality}, Bitrate: \${workingStream.bitrate} bps)\`);
+
+                    audioPlayer.play().catch(error => {
+                        console.error('Error playing audio:', error);
+                        vscode.postMessage({ type: 'error', text: 'Failed to play audio' });
+                    });
+
+                    if (isAutoplayEnabled) {
+                        findAndPreloadNext(title, artist, videoId);
+                    }
+                } else {
+                    console.error('No audio streams found for video:', videoId);
+                    miniPlayerTitle.textContent = 'No streams available';
+                    miniPlayerArtist.textContent = 'Try another song';
+                    vscode.postMessage({ type: 'error', text: 'No audio streams available for this song' });
+                }
+            } catch (error) {
+                console.error('Error fetching audio stream:', error);
+                const miniPlayerTitle = document.getElementById('miniPlayerTitle');
+                const miniPlayerArtist = document.getElementById('miniPlayerArtist');
+                miniPlayerTitle.textContent = 'Error loading';
+                miniPlayerArtist.textContent = 'Try again later';
+                vscode.postMessage({ type: 'error', text: \`Failed to load audio stream: \${error.message}\` });
             }
         }
 
