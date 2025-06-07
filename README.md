@@ -1,97 +1,110 @@
-# YouTube Music Streamer - VS Code Extension
+# 🎵 Your Personal Music Player
 
-Stream YouTube music directly inside VS Code with a beautiful, integrated music player.
+Listen to your favorite YouTube music while you work - no distractions, no interruptions.
 
-![YouTube Music Streamer](https://img.shields.io/badge/VS%20Code-Extension-blue.svg)
+![Music Player](https://img.shields.io/badge/Music-Player-blue.svg)
 ![Version](https://img.shields.io/badge/version-1.0.3-green.svg)
 
-## 📸 Screenshot
+## 📸 Take a Look
 
-<img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/screenshot.png" alt="YouTube Music Streamer Screenshot" width="300" height="400">
+### Main Player Interface
+<img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/Screenshot-1.png" alt="Main Music Player Interface" width="300" height="400">
 
-*Stream YouTube music directly in your VS Code workspace with an integrated player, trending music, search functionality, and smart autoplay features.*
+### Trending Music Discovery
+<img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/Screenshot-2.png" alt="Trending Music Section" width="300" height="400">
 
-## ✨ Features
+### Search & Find Your Music
+<img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/Screenshot-3.png" alt="Music Search Feature" width="300" height="400">
 
-- **🎵 Stream YouTube Music**: Play any music from YouTube directly in VS Code
-- **🔥 Trending Music**: Browse currently trending music videos
-- **🔍 Smart Search**: Search for any song or artist with live results
-- **🌍 Regional Content**: Explore popular music from different regions
-- **📋 Sidebar Integration**: Always accessible from VS Code's Explorer panel
-- **🎮 Status Bar Controls**: Quick player controls in your status bar
-- **🔄 Smart Autoplay**: Automatically plays similar songs when current song ends
-- **⚡ Seamless Playback**: Smooth transitions between songs
-- **🎨 VS Code Theme**: Matches your editor's dark/light theme
-- **⌨️ Keyboard Shortcuts**: Quick access with `Ctrl+Shift+Y` (or `Cmd+Shift+Y` on Mac)
+### Player Controls
+<img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/Screenshot-4.png" alt="Music Player Controls" width="300" height="400">
 
-## 🚀 Installation
+### Full Experience
+<img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/Screenshot-5.png" alt="Complete Music Player Experience" width="300" height="400">
 
-### From VS Code Marketplace
+*Your favorite YouTube music, right where you work. Simple, clean, and always there when you need it.*
 
-1. Open VS Code
-2. Go to Extensions (`Ctrl+Shift+X` or `Cmd+Shift+X`)
+## ✨ What You Can Do
+
+- **🎵 Play Any Music**: Listen to any song from YouTube 
+- **🔥 Discover Trending**: See what's popular right now
+- **🔍 Find Your Music**: Search for any song or artist instantly
+- **🌍 Explore Global Music**: Check out popular music from around the world
+- **📋 Always Available**: Your music player is always ready to use
+- **🎮 Easy Controls**: Simple play, pause, skip buttons right at your fingertips
+- **🔄 Never-Ending Music**: Automatically plays similar songs so the music never stops
+- **⚡ Smooth Experience**: Songs flow seamlessly from one to the next
+- **🎨 Looks Great**: Matches your workspace theme perfectly
+- **⌨️ Quick Access**: Open with `Ctrl+Shift+Y` (or `Cmd+Shift+Y` on Mac)
+
+## 🚀 Getting Started
+
+### How to Install
+
+1. Open your code editor
+2. Go to the Extensions area (`Ctrl+Shift+X` or `Cmd+Shift+X`)
 3. Search for "YouTube Music Streamer"
 4. Click "Install"
 
-### Setup
+### Ready to Use
 
-1. **Ready to Use**: No setup required! The extension works immediately after installation
-2. **Start Using**:
+1. **No Setup Needed**: Just install and start listening!
+2. **Start Playing**:
    - Press `Ctrl+Shift+Y` (or `Cmd+Shift+Y` on Mac)
-   - Or click the music icon in your status bar
-   - Or use the YouTube Music section in Explorer panel
+   - Or click the music button in your status area
+   - Or use the YouTube Music section in your file explorer
 
 ## 🎯 How to Use
 
-### Opening the Music Player
+### Opening Your Music Player
 
-- **Keyboard Shortcut**: `Ctrl+Shift+Y` (or `Cmd+Shift+Y` on Mac)
-- **Explorer Panel**: Click any option in "YouTube Music Player" section
-- **Status Bar**: Click the music icon
-- **Command Palette**: `Ctrl+Shift+P` → "Open YouTube Music Player"
+- **Quick Key**: `Ctrl+Shift+Y` (or `Cmd+Shift+Y` on Mac)
+- **File Explorer**: Click any option in "YouTube Music Player" section
+- **Status Area**: Click the music icon
+- **Command Menu**: `Ctrl+Shift+P` → "Open YouTube Music Player"
 
-### Playing Music
+### Playing Your Music
 
-1. **Browse** trending music, search for songs, or explore regional content
-2. **Click Play** on any song
-3. **Enjoy** seamless playback with auto-suggestions
-4. **Control** playback using the built-in player controls
+1. **Browse** trending music, search for songs, or explore music from different places
+2. **Click Play** on any song you like
+3. **Enjoy** continuous music with smart suggestions
+4. **Control** everything with simple, easy-to-use buttons
 
-### Smart Features
+### Smart Features That Make Life Easier
 
-- **Autoplay**: Automatically finds and plays similar songs
-- **Preloading**: Next song loads in background for smooth transitions
-- **Queue**: Maintains a smart queue of related music
-- **Regional Content**: Discover music popular in different countries
+- **Auto-Continue**: Automatically finds and plays similar songs
+- **Always Ready**: Next song loads in the background for seamless listening
+- **Smart Playlist**: Keeps a collection of related music ready
+- **Global Discovery**: Find music that's popular in different countries
 
-## ⚙️ Settings
+## ⚙️ Make it Yours
 
-| Setting | Description |
-|---------|-------------|
-| **Max Results** | Number of songs to load (5-50) |
-| **Region** | Region for trending content (US, IN, GB, etc.) |
-| **Auto Start** | Open player automatically when VS Code starts |
+| What You Can Change | What It Does |
+|---------------------|--------------|
+| **How Many Songs** | Choose how many songs to show (5-50) |
+| **Your Region** | Pick your country for local trending music (US, India, UK, etc.) |
+| **Auto Start** | Have your music player open automatically when you start working |
 
-## 🎵 What You Get
+## 🎵 Why You'll Love It
 
-- **Full Music Library**: Access to YouTube's entire music collection
-- **No Setup Required**: Works immediately after installation
-- **Always Available**: Music player integrated into your coding workspace
-- **Smart Recommendations**: Discover new music similar to what you like
-- **Distraction-Free**: Clean interface that doesn't interrupt your workflow
-- **Completely Free**: No additional accounts or subscriptions required
+- **Endless Music**: Access to YouTube's entire music library
+- **No Complicated Setup**: Just install and start listening
+- **Always There**: Your music player is part of your workspace
+- **Smart Suggestions**: Discover new music you'll actually like
+- **Stay Focused**: Clean, simple design that doesn't get in your way
+- **Completely Free**: No extra accounts or paid subscriptions needed
 
-## 📋 Quick Tips
+## 📋 Helpful Tips
 
-- **Search Tips**: Use artist names, song titles, or genres for best results
-- **Regional Music**: Switch regions to discover music from different countries
-- **Trending**: Check trending tab for popular music right now
-- **Autoplay**: Enable autoplay for continuous music while coding
-- **Status Bar**: Keep track of current song without switching tabs
+- **Better Search**: Try artist names, song titles, or music types for the best results
+- **Discover New Music**: Switch between different countries to find new favorites
+- **What's Hot**: Check the trending section to see what everyone's listening to
+- **Continuous Music**: Turn on auto-continue for non-stop music while you work
+- **Stay Informed**: See what's playing right in your status area
 
-## 🛠️ Requirements
+## 🛠️ What You Need
 
-- VS Code version 1.60.0 or higher
+- A recent version of VS Code (1.60.0 or newer)
 - Internet connection
 
-**Transform your coding experience with music! 🎵✨** 
+**Turn your workspace into your personal music space! 🎵✨** 
