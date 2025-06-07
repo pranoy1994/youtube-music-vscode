@@ -10,26 +10,21 @@ Listen to your favorite YouTube music while you work - no distractions, no inter
 <table>
   <tr>
     <td align="center">
-      <img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/Screenshot-1.png" alt="Main Music Player Interface" width="250" height="320">
-      <br><b>Main Player Interface</b>
+      <img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/Screenshot-1.png" alt="Main Music Player Interface" width="" height="320">
     </td>
     <td align="center">
-      <img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/Screenshot-2.png" alt="Trending Music Section" width="250" height="320">
-      <br><b>Trending Music Discovery</b>
+      <img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/Screenshot-2.png" alt="Trending Music Section" width="" height="320">
     </td>
     <td align="center">
-      <img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/Screenshot-3.png" alt="Music Search Feature" width="250" height="320">
-      <br><b>Search & Find Your Music</b>
+      <img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/Screenshot-3.png" alt="Music Search Feature" width="" height="320">
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/Screenshot-4.png" alt="Music Player Controls" width="250" height="320">
-      <br><b>Player Controls</b>
+      <img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/Screenshot-4.png" alt="Music Player Controls" width="" height="320">
     </td>
     <td align="center">
-      <img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/Screenshot-5.png" alt="Complete Music Player Experience" width="250" height="320">
-      <br><b>Full Experience</b>
+      <img src="https://raw.githubusercontent.com/pranoy1994/youtube-music-vscode/refs/heads/main/docs/Screenshot-5.png" alt="Complete Music Player Experience" width="" height="320">
     </td>
     <td align="center">
       <!-- Empty cell for balanced grid -->
