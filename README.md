@@ -3,7 +3,7 @@
 Listen to your favorite YouTube music while you work - no distractions, no interruptions.
 
 ![Music Player](https://img.shields.io/badge/Music-Player-blue.svg)
-![Version](https://img.shields.io/badge/version-1.0.3-green.svg)
+![Version](https://img.shields.io/badge/version-1.2.1-green.svg)
 
 ## 📸 Take a Look
 
