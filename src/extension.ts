@@ -1,4 +1,18 @@
 import * as vscode from 'vscode';
+/*
+//create envConfig.ts that contains the environment variables for the extension.
+export interface EnvConfig {
+  MUSIC_PLAYER_URL: string;
+  [key: string]: any;
+}
+
+export function getEnvConfig(): EnvConfig {
+  return {
+    MUSIC_PLAYER_URL: 'http://localhost:3000' 
+  };
+} 
+*/
+import { getEnvConfig } from './envConfig';
 
 let statusBarItem: vscode.StatusBarItem | undefined = undefined;
 
@@ -91,16 +105,21 @@ class YouTubeMusicViewProvider implements vscode.WebviewViewProvider {
             }
         }
     }
+    private _getIframeSrc(): { url: string, iframeSrc: string } {
+        const URL = getEnvConfig().MUSIC_PLAYER_URL || '';
+        return {
+            url: URL,
+            iframeSrc: `${URL}?_t=${Date.now()}&vscode=true`,
+        }
+    }
 
     private _getHtmlForWebview(webview: vscode.Webview): string {
-        // Add timestamp to force iframe reload on refresh
-        const timestamp = Date.now();
         return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https: data: vscode-resource:; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; media-src https: data: blob:; connect-src https: wss:; font-src 'self' data: https:; child-src 'none'; frame-src https://music-player-f09.pages.dev/">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https: data: vscode-resource:; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; media-src https: data: blob:; connect-src https: wss:; font-src 'self' data: https:; child-src 'none'; frame-src ${this._getIframeSrc().url}">
     <title>YouTube Music Player</title>
     <style>
         html, body {
@@ -119,7 +138,7 @@ class YouTubeMusicViewProvider implements vscode.WebviewViewProvider {
     </style>
 </head>
 <body>
-    <iframe src="https://music-player-f09.pages.dev/?_t=${timestamp}"></iframe>
+    <iframe src="${this._getIframeSrc().iframeSrc}" allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen ></iframe>
 </body>
 </html>`;
     }
