@@ -2,6 +2,8 @@
 
 Listen to your favorite YouTube music while you work - no distractions, no interruptions.
 
+> **⚠️ Important Notice:** For now this extension works with Cursor IDE because of YouTube audio codec limitations in VSCode. We will soon fix this issue.
+
 ![Music Player](https://img.shields.io/badge/Music-Player-blue.svg)
 ![Version](https://img.shields.io/badge/version-1.2.1-green.svg)
 
@@ -117,4 +119,4 @@ Listen to your favorite YouTube music while you work - no distractions, no inter
 - A recent version of VS Code (1.60.0 or newer)
 - Internet connection
 
-**Turn your workspace into your personal music space! 🎵✨** 
+**Turn your workspace into your personal music space! 🎵✨**
