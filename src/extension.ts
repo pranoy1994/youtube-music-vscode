@@ -54,41 +54,125 @@ class YouTubeMusicViewProvider implements vscode.WebviewViewProvider {
         // Handle messages from the webview
         webviewView.webview.onDidReceiveMessage(
         message => {
+            console.log('[Extension] Received message from webview:', {
+                type: message.type,
+                message: message,
+                timestamp: new Date().toISOString()
+            });
+
             switch (message.type) {
                 case 'info':
-                    // vscode.window.showInformationMessage(message.text);
+                    console.log('[Extension] Processing info message:', message.text);
+                    if (message.text) {
+                        vscode.window.showInformationMessage(`YouTube Music: ${message.text}`);
+                        console.log('[Extension] ✅ Info message displayed successfully');
+                    } else {
+                        console.warn('[Extension] ❌ Info message missing text field');
+                    }
                     break;
                 case 'error':
-                    // vscode.window.showErrorMessage(message.text);
+                    console.log('[Extension] Processing error message:', message.text);
+                    if (message.text) {
+                        vscode.window.showErrorMessage(`YouTube Music Error: ${message.text}`);
+                        console.log('[Extension] ✅ Error message displayed successfully');
+                    } else {
+                        console.warn('[Extension] ❌ Error message missing text field');
+                    }
                     break;
                 case 'warning':
-                    // vscode.window.showWarningMessage(message.text);
+                    console.log('[Extension] Processing warning message:', message.text);
+                    if (message.text) {
+                        vscode.window.showWarningMessage(`YouTube Music Warning: ${message.text}`);
+                        console.log('[Extension] ✅ Warning message displayed successfully');
+                    } else {
+                        console.warn('[Extension] ❌ Warning message missing text field');
+                    }
                     break;
                 case 'nowPlaying':
+                    console.log('[Extension] Processing nowPlaying message:', {
+                        title: message.title,
+                        artist: message.artist,
+                        originalTitle: message.originalTitle
+                    });
                     if (statusBarItem) {
-                        statusBarItem.text = `$(music) ${message.title}`;
-                        statusBarItem.tooltip = `Now Playing: ${message.title}`;
+                        // Use the title provided by iframe (already formatted with artist if available)
+                        const displayText = message.title || (message.artist && message.originalTitle ? 
+                            `${message.artist} - ${message.originalTitle}` : message.originalTitle || 'Unknown Track');
+                        statusBarItem.text = `$(music) ${displayText}`;
+                        statusBarItem.tooltip = `Now Playing: ${displayText}`;
+                        console.log('[Extension] ✅ Status bar updated with:', displayText);
+                    } else {
+                        console.error('[Extension] ❌ Status bar item not available');
                     }
                     break;
                 case 'stopped':
+                    console.log('[Extension] Processing stopped message');
                     if (statusBarItem) {
-                            statusBarItem.text = "$(music) YouTube Music";
-                            statusBarItem.tooltip = "YouTube Music Player";
+                        statusBarItem.text = "$(music) YouTube Music";
+                        statusBarItem.tooltip = "YouTube Music Player";
+                        console.log('[Extension] ✅ Status bar reset to default');
+                    } else {
+                        console.error('[Extension] ❌ Status bar item not available');
                     }
                     break;
                 case 'getConfig':
-                    // Send configuration to webview
-                    const currentConfig = vscode.workspace.getConfiguration('youtubeMusicStreamer');
-                        webviewView.webview.postMessage({
-                        type: 'config',
-                        config: {
+                    console.log('[Extension] Processing getConfig message');
+                    try {
+                        const currentConfig = vscode.workspace.getConfiguration('youtubeMusicStreamer');
+                        const config = {
                             maxResults: currentConfig.get<number>('maxResults', 25),
                             region: currentConfig.get<string>('region', 'US')
-                        }
-                    });
+                        };
+                        webviewView.webview.postMessage({
+                            type: 'config',
+                            config: config
+                        });
+                        console.log('[Extension] ✅ Config sent to webview:', config);
+                    } catch (error) {
+                        console.error('[Extension] ❌ Failed to get/send config:', error);
+                    }
                     break;
                 case 'openSettings':
-                    vscode.commands.executeCommand('workbench.action.openSettings', 'youtubeMusicStreamer');
+                    console.log('[Extension] Processing openSettings message');
+                    try {
+                        vscode.commands.executeCommand('workbench.action.openSettings', 'youtubeMusicStreamer');
+                        console.log('[Extension] ✅ Settings opened successfully');
+                    } catch (error) {
+                        console.error('[Extension] ❌ Failed to open settings:', error);
+                    }
+                    break;
+                case 'click':
+                case 'openUrl':
+                    console.log('[Extension] Processing click/openUrl message:', {
+                        url: message.url,
+                        data: message
+                    });
+                    if (message.url) {
+                        try {
+                            // Validate URL format
+                            const url = new URL(message.url);
+                            console.log('[Extension] Opening URL in external browser:', url.toString());
+                            
+                            // Open URL in external browser
+                            vscode.env.openExternal(vscode.Uri.parse(url.toString()));
+                            console.log('[Extension] ✅ URL opened successfully in external browser');
+                        } catch (error) {
+                            console.error('[Extension] ❌ Invalid URL or failed to open:', {
+                                url: message.url,
+                                error: error
+                            });
+                            vscode.window.showErrorMessage(`YouTube Music: Invalid URL - ${message.url}`);
+                        }
+                    } else {
+                        console.warn('[Extension] ❌ Click message missing URL field:', message);
+                        vscode.window.showWarningMessage('YouTube Music: No URL provided for external link');
+                    }
+                    break;
+                default:
+                    console.warn('[Extension] ❌ Received unknown message type:', {
+                        type: message.type,
+                        message: message
+                    });
                     break;
             }
             }
@@ -139,6 +223,52 @@ class YouTubeMusicViewProvider implements vscode.WebviewViewProvider {
 </head>
 <body>
     <iframe src="${this._getIframeSrc().iframeSrc}" allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen ></iframe>
+    
+    <script>
+        // Get VS Code API
+        const vscode = acquireVsCodeApi();
+        
+        console.log('[WebView Bridge] Initializing message bridge for YouTube Music extension');
+        
+        // Listen for messages from the iframe (your website)
+        window.addEventListener('message', (event) => {
+            console.log('[WebView Bridge] Received postMessage event:', {
+                origin: event.origin,
+                data: event.data,
+                source: event.source === iframe?.contentWindow ? 'iframe' : 'other'
+            });
+            
+            // Security: Verify the origin if needed
+            // if (event.origin !== '${this._getIframeSrc().url}') {
+            //     console.warn('[WebView Bridge] Message from unexpected origin:', event.origin);
+            //     return;
+            // }
+            
+            // Forward the message from iframe to VS Code extension
+            if (event.data && event.data.type) {
+                console.log('[WebView Bridge] ✅ Forwarding valid message to VS Code extension:', {
+                    type: event.data.type,
+                    data: event.data
+                });
+                vscode.postMessage(event.data);
+            } else {
+                console.log('[WebView Bridge] ❌ Ignoring invalid message (no type field):', event.data);
+            }
+        });
+        
+        // Log when iframe loads
+        const iframe = document.querySelector('iframe');
+        if (iframe) {
+            iframe.onload = () => {
+                console.log('[WebView Bridge] ✅ YouTube Music iframe loaded successfully');
+            };
+            iframe.onerror = (error) => {
+                console.error('[WebView Bridge] ❌ Failed to load iframe:', error);
+            };
+        }
+        
+        console.log('[WebView Bridge] Message bridge setup complete');
+    </script>
 </body>
 </html>`;
     }
