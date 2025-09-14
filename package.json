@@ -2,7 +2,7 @@
   "name": "youtube-music-streamer",
   "displayName": "YouTube Music Streamer",
   "description": "Stream YouTube music directly inside VS Code",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "publisher": "pranoybiswaas",
   "icon": "icon.png",
   "repository": {
